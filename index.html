@@ -1,0 +1,600 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CEE B.Sc. Nursing Mock Test 2081</title>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI',system-ui,sans-serif;background:#f0f4f8;color:#1a202c;min-height:100vh}
+:root{--blue:#2563eb;--green:#16a34a;--red:#dc2626;--amber:#d97706;--border:#e2e8f0;--card:#fff;--bg:#f0f4f8;--text:#1a202c;--muted:#64748b}
+
+/* SCREENS */
+#screen-start,#screen-exam,#screen-result{display:none}
+#screen-start.active,#screen-exam.active,#screen-result.active{display:block}
+
+/* START SCREEN */
+.start-wrap{max-width:620px;margin:0 auto;padding:40px 20px}
+.logo{text-align:center;margin-bottom:32px}
+.logo-badge{display:inline-flex;align-items:center;gap:10px;background:var(--blue);color:#fff;padding:12px 24px;border-radius:12px;font-size:22px;font-weight:700;letter-spacing:.5px}
+.logo-sub{font-size:13px;color:var(--muted);margin-top:6px;text-align:center}
+.info-card{background:var(--card);border-radius:14px;border:1px solid var(--border);padding:28px;margin-bottom:20px}
+.info-card h2{font-size:17px;font-weight:600;margin-bottom:16px;color:#0f172a}
+.info-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.info-item{background:#f8fafc;border-radius:10px;padding:14px;border:1px solid var(--border)}
+.info-item .label{font-size:11px;color:var(--muted);text-transform:uppercase;letter-spacing:.6px;margin-bottom:4px}
+.info-item .value{font-size:16px;font-weight:600;color:#0f172a}
+.section-pills{display:flex;flex-wrap:wrap;gap:8px;margin-top:16px}
+.pill{padding:5px 12px;border-radius:20px;font-size:12px;font-weight:500}
+.pill-zoo{background:#dbeafe;color:#1e40af}
+.pill-bot{background:#dcfce7;color:#166534}
+.pill-chem{background:#fef9c3;color:#854d0e}
+.pill-phy{background:#fce7f3;color:#9d174d}
+.pill-math{background:#ede9fe;color:#5b21b6}
+.btn-start{width:100%;padding:16px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:17px;font-weight:600;cursor:pointer;transition:background .15s}
+.btn-start:hover{background:#1d4ed8}
+.rules{font-size:13px;color:var(--muted);line-height:1.7}
+.rules li{margin-bottom:4px}
+
+/* EXAM SCREEN */
+.exam-header{background:#fff;border-bottom:1px solid var(--border);position:sticky;top:0;z-index:100;padding:0 20px}
+.exam-header-inner{max-width:900px;margin:0 auto;display:flex;align-items:center;justify-content:space-between;height:56px;gap:12px}
+.timer{display:flex;align-items:center;gap:8px;font-size:18px;font-weight:700;color:#0f172a}
+.timer.warn{color:var(--amber)}
+.timer.danger{color:var(--red)}
+.timer-icon{font-size:18px}
+.score-live{font-size:13px;color:var(--muted);display:flex;gap:16px}
+.score-live span{display:flex;align-items:center;gap:4px}
+.btn-submit{padding:8px 18px;background:var(--blue);color:#fff;border:none;border-radius:8px;font-size:14px;font-weight:600;cursor:pointer}
+
+.exam-body{max-width:900px;margin:0 auto;padding:24px 16px 80px}
+.section-header{font-size:13px;font-weight:600;text-transform:uppercase;letter-spacing:.8px;color:var(--muted);margin:28px 0 16px;padding-bottom:8px;border-bottom:2px solid var(--border);display:flex;align-items:center;gap:8px}
+.section-dot{width:10px;height:10px;border-radius:50%;display:inline-block}
+
+.qcard{background:var(--card);border:1.5px solid var(--border);border-radius:12px;padding:20px;margin-bottom:12px;transition:border-color .15s}
+.qcard.answered{border-color:#93c5fd}
+.qnum{font-size:11px;color:var(--muted);font-weight:600;margin-bottom:8px;text-transform:uppercase;letter-spacing:.5px}
+.qtext{font-size:15px;line-height:1.6;color:#0f172a;margin-bottom:16px;font-weight:500}
+.opts{display:flex;flex-direction:column;gap:8px}
+.opt{display:flex;align-items:center;gap:12px;padding:11px 14px;border-radius:9px;border:1.5px solid var(--border);cursor:pointer;transition:all .12s;font-size:14px;color:#334155;background:#fff}
+.opt:hover{border-color:#93c5fd;background:#eff6ff}
+.opt.selected{border-color:var(--blue);background:#eff6ff;color:var(--blue);font-weight:500}
+.opt-letter{width:24px;height:24px;border-radius:50%;background:#f1f5f9;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;color:#64748b}
+.opt.selected .opt-letter{background:var(--blue);color:#fff}
+
+/* RESULT SCREEN */
+.result-wrap{max-width:700px;margin:0 auto;padding:32px 16px}
+.result-hero{background:linear-gradient(135deg,#1e40af,#2563eb);color:#fff;border-radius:16px;padding:32px;text-align:center;margin-bottom:24px}
+.result-hero h1{font-size:28px;font-weight:700;margin-bottom:4px}
+.result-hero .score-big{font-size:56px;font-weight:800;line-height:1;margin:12px 0}
+.result-hero .score-max{font-size:18px;opacity:.8}
+.result-hero .grade{font-size:15px;opacity:.9;margin-top:8px}
+.stats-grid{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-bottom:20px}
+.stat-box{background:#fff;border:1px solid var(--border);border-radius:12px;padding:16px;text-align:center}
+.stat-box .n{font-size:24px;font-weight:700;margin-bottom:4px}
+.stat-box .l{font-size:12px;color:var(--muted)}
+.n-correct{color:var(--green)}
+.n-wrong{color:var(--red)}
+.n-skip{color:var(--muted)}
+.n-score{color:var(--blue)}
+
+.section-scores{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+.section-scores h3{font-size:15px;font-weight:600;margin-bottom:16px}
+.sec-row{display:flex;align-items:center;gap:12px;margin-bottom:12px}
+.sec-name{width:120px;font-size:13px;font-weight:500;flex-shrink:0}
+.sec-bar-wrap{flex:1;height:10px;background:#f1f5f9;border-radius:5px;overflow:hidden}
+.sec-bar{height:100%;border-radius:5px;transition:width .8s}
+.sec-pct{font-size:12px;color:var(--muted);width:40px;text-align:right;flex-shrink:0}
+
+.review-section{background:#fff;border:1px solid var(--border);border-radius:12px;padding:20px;margin-bottom:20px}
+.review-section h3{font-size:15px;font-weight:600;margin-bottom:16px}
+.rqcard{border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:10px}
+.rqcard.correct{border-color:#86efac;background:#f0fdf4}
+.rqcard.wrong{border-color:#fca5a5;background:#fef2f2}
+.rqcard.skipped{border-color:#e2e8f0;background:#f8fafc}
+.rq-meta{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.rq-badge{padding:2px 8px;border-radius:20px;font-size:11px;font-weight:600}
+.badge-correct{background:#dcfce7;color:#166534}
+.badge-wrong{background:#fee2e2;color:#991b1b}
+.badge-skipped{background:#f1f5f9;color:#64748b}
+.rq-text{font-size:14px;color:#0f172a;margin-bottom:10px;line-height:1.5}
+.rq-opts{display:flex;flex-direction:column;gap:5px}
+.rq-opt{font-size:13px;padding:6px 10px;border-radius:7px;display:flex;align-items:center;gap:8px}
+.rq-opt.correct-ans{background:#dcfce7;color:#166534;font-weight:500}
+.rq-opt.user-wrong{background:#fee2e2;color:#991b1b}
+.btn-retry{width:100%;padding:14px;background:var(--blue);color:#fff;border:none;border-radius:12px;font-size:16px;font-weight:600;cursor:pointer;margin-top:8px}
+.btn-retry:hover{background:#1d4ed8}
+
+@media(max-width:540px){
+  .info-grid{grid-template-columns:1fr 1fr}
+  .stats-grid{grid-template-columns:repeat(2,1fr)}
+  .sec-name{width:80px;font-size:12px}
+}
+</style>
+</head>
+<body>
+
+<!-- START SCREEN -->
+<div id="screen-start" class="active">
+  <div class="start-wrap">
+    <div class="logo">
+      <div class="logo-badge">📋 CEE Mock Test</div>
+      <div class="logo-sub">B.Sc. Nursing Entrance Examination 2081</div>
+    </div>
+
+    <div class="info-card">
+      <h2>Exam Details</h2>
+      <div class="info-grid">
+        <div class="info-item"><div class="label">Total Questions</div><div class="value">200</div></div>
+        <div class="info-item"><div class="label">Total Marks</div><div class="value">200</div></div>
+        <div class="info-item"><div class="label">Duration</div><div class="value">3 Hours</div></div>
+        <div class="info-item"><div class="label">Negative Marking</div><div class="value">−0.25</div></div>
+        <div class="info-item"><div class="label">Correct Answer</div><div class="value">+1 Mark</div></div>
+        <div class="info-item"><div class="label">Unanswered</div><div class="value">0 Marks</div></div>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h2>Subjects</h2>
+      <div class="section-pills">
+        <span class="pill pill-zoo">🔬 Zoology (Q1–40)</span>
+        <span class="pill pill-bot">🌿 Botany (Q41–73)</span>
+        <span class="pill pill-chem">⚗️ Chemistry (Q74–130)</span>
+        <span class="pill pill-phy">⚡ Physics (Q131–179)</span>
+        <span class="pill pill-math">🧮 Math & Reasoning (Q180–200)</span>
+      </div>
+    </div>
+
+    <div class="info-card">
+      <h2>Instructions</h2>
+      <ul class="rules">
+        <li>Each correct answer carries <strong>+1 mark</strong></li>
+        <li>Each wrong answer carries <strong>−0.25 marks</strong></li>
+        <li>Unattempted questions carry <strong>0 marks</strong></li>
+        <li>Timer will start as soon as you click Start</li>
+        <li>You can change your answer anytime before submission</li>
+        <li>Test auto-submits when time runs out</li>
+      </ul>
+    </div>
+
+    <button class="btn-start" onclick="startExam()">Start Mock Test →</button>
+  </div>
+</div>
+
+<!-- EXAM SCREEN -->
+<div id="screen-exam">
+  <div class="exam-header">
+    <div class="exam-header-inner">
+      <div class="timer" id="timer">⏱ 3:00:00</div>
+      <div class="score-live">
+        <span id="live-answered" style="color:var(--blue)">✓ 0 answered</span>
+        <span id="live-remaining" style="color:var(--muted)">200 left</span>
+      </div>
+      <button class="btn-submit" onclick="confirmSubmit()">Submit</button>
+    </div>
+  </div>
+  <div class="exam-body" id="exam-body"></div>
+</div>
+
+<!-- RESULT SCREEN -->
+<div id="screen-result">
+  <div class="result-wrap">
+    <div class="result-hero" id="result-hero"></div>
+    <div class="stats-grid" id="stats-grid"></div>
+    <div class="section-scores" id="section-scores"></div>
+    <div class="review-section" id="review-section"></div>
+    <button class="btn-retry" onclick="retryExam()">Retake Test</button>
+  </div>
+</div>
+
+<script>
+const QUESTIONS = [
+  // ZOOLOGY
+  {s:'Zoology',q:'Which of the following has the lowest cranial capacity?',o:['Gorilla','Gibbon','Java ape man','Modern man'],a:1},
+  {s:'Zoology',q:'Which of the following is a viral disease?',o:['Diptheria','Filariasis','Leprosy','Influenza'],a:3},
+  {s:'Zoology',q:'The infective stage of malarial parasite, Plasmodium that enters human body is:',o:['Merozoite','Sporozoite','Trophozoite','Schizont'],a:1},
+  {s:'Zoology',q:'Trophozoites and schizonts of which of the following is not seen in the peripheral blood?',o:['P. vivax','P. falciparum','P. malariae','P. ovale'],a:1},
+  {s:'Zoology',q:'Strongest ligament:',o:['Falciform ligament','Inguinal ligament','Femoral ligament','Iliofemoral ligament'],a:3},
+  {s:'Zoology',q:'Digestion in protozoa is:',o:['Intracellular','Partially intracellular','Extracellular','Extracellular followed by intracellular'],a:0},
+  {s:'Zoology',q:'Which of the following vitamins helps in clotting of blood?',o:['Vitamin A','Vitamin D','Vitamin E','Vitamin K'],a:3},
+  {s:'Zoology',q:'Which is the phagocytic cell of human brain?',o:['Microglia','Kupffer cell','Dust cell','Histiocytes'],a:0},
+  {s:'Zoology',q:'Eutherians are characterized by:',o:['Hairy skin','True placentation','Ovoviviparity','Glandular skin'],a:1},
+  {s:'Zoology',q:'Which of the following is true character for Chordata?',o:['Acrodont dentation','Monocondylic skull','Ten pairs of cranial nerve','Seven cervical vertebrae'],a:3},
+  {s:'Zoology',q:'The initial step in the digestion of milk in adult human is carried out by:',o:['Lipase','Trypsin','Rennin','Pepsin'],a:3},
+  {s:'Zoology',q:'Which of the following is not an enzyme?',o:['Insulin','Trypsin','Cellulase','Ptyalin'],a:0},
+  {s:'Zoology',q:'Which of the following is true about signet ring stage?',o:['Vacuole moves to the centre of cell','Has hemozoin and schuffner dot','Has petals-like appearance','Possesses pseudopodia process'],a:0},
+  {s:'Zoology',q:'Colostrum is very essential to impart immunity to the new born infants because it contains:',o:['Immunoglobulin A','Natural killer (NK) cells','Monocytes','Macrophages'],a:0},
+  {s:'Zoology',q:'Heroin is also known as:',o:['Smack','Cocaine','LSD','Ganja'],a:0},
+  {s:'Zoology',q:'Frog belongs to class:',o:['Amphibia','Reptiles','Tetrapoda','Gnathostomata'],a:0},
+  {s:'Zoology',q:'Cephalopods scare or distract predators through:',o:['Ink glands','8 legs/arms','Calcareous shell','Nematocyst'],a:0},
+  {s:'Zoology',q:'Co-ordination and controlling of rapid muscular movement is maintained by:',o:['Corpus callosum','Cerebrum','Cerebellum','Medulla oblongata'],a:2},
+  {s:'Zoology',q:'Neurotransmitters are present in:',o:['Synaptic vesicle','Post-synaptic membrane','Synaptic-cleft','Pre-synaptic membrane'],a:0},
+  {s:'Zoology',q:'Truncus arteriosus in frog is divided into pylangium and synangium, again it is divided into:',o:['3 branches','1 branch','2 branches','No branch'],a:2},
+  {s:'Zoology',q:'Vasa efferentia in frog arises from:',o:['Bidder canal','Kidney','Cloaca','Testes'],a:3},
+  {s:'Zoology',q:'Which of the following is not one of the distinguishing characteristics of Arthropods?',o:['Jointed legs','Segmented body','A closed circulatory system','An exoskeleton of chitin'],a:2},
+  {s:'Zoology',q:'Theory of abiogenesis refers to:',o:['Spontaneous generation','Creation of new organism from spore','Origin of life by catastrophic event','Origin of life from non-living things'],a:0},
+  {s:'Zoology',q:'In Miller and Urey experiments, the gases used were:',o:['CH₄, NH₃, H₂ & H₂O','CH₄, NH₃, CO₂ & H₂O','H₂, O₂, CO₂ & H₂O','NH₃, H₂, H₂O & CO₂'],a:0},
+  {s:'Zoology',q:'Which of the following is true about areolar tissue?',o:['It contains adipocytes','It contains macrophages','It is a type of epithelial tissue','It lacks mast cells'],a:1},
+  {s:'Zoology',q:'A person with rose spots in abdomen, persistent high fever and GI problems after eating street food may be affected from:',o:['Tuberculosis','Typhoid','AIDS','Common cold'],a:1},
+  {s:'Zoology',q:'Which of the following groups consists classes only?',o:['Rhizopoda, Mammalia, Merostomata','Amphibia, Mammalia, Arthropoda','Arthropoda, Echinodermata, Mollusca','Rhizopoda, Protozoa, Porifera'],a:0},
+  {s:'Zoology',q:'Which of the following is a chronic inflammatory disease?',o:['Cystic fibrosis','Tuberculosis','Rheumatoid arthritis','Acapnia'],a:2},
+  {s:'Zoology',q:'The process by which round non-motile spermatids transform into fully formed motile spermatozoa is called:',o:['Spermatogenesis','Spermatocytogenesis','Spermiogenesis','Spermiation'],a:2},
+  {s:'Zoology',q:'Milk digestion in children is done by:',o:['Rennin','Renin','Trypsin','Amylase'],a:0},
+  {s:'Zoology',q:'Which endocrine gland is present in children but gradually decreases from puberty and gets replaced by fat cells in adult?',o:['Thymus','Pineal','Thyroid','Adrenal'],a:0},
+  {s:'Zoology',q:'Migration of fish within freshwater is called:',o:['Anadromous migration','Catadromous migration','Potamodromous migration','Oceanodromous migration'],a:2},
+  {s:'Zoology',q:'Which of the following is not an invertebrate?',o:['Cuttlefish','Cray fish','Globe fish','Devil fish'],a:2},
+  {s:'Zoology',q:'Which of the following tissue provides cushion for cells?',o:['Adipose','Bone','Cartilage','Epithelial'],a:0},
+  {s:'Zoology',q:'Connective tissue for providing structural support to joints, respiratory tract and embryonic skeleton is:',o:['Bone','Muscle','Cartilage','Blood'],a:2},
+  {s:'Zoology',q:'Which structure serves as hydraulic skeleton in earthworm?',o:['Setae','Nephridia','Coelomic fluid','Muscular wall of body'],a:2},
+  {s:'Zoology',q:'Which of the following is present in circulatory system (blood) of earthworm?',o:['Hemoglobin','Methemoglobin','Serum','Hemocyanin'],a:0},
+  {s:'Zoology',q:'Venus flower basket:',o:['Euplectella','Hyalonema','Spongilla','Euspongia'],a:0},
+  {s:'Zoology',q:'A person met with an accident in which two long bones of his forearm were dislocated. Which may be the possible reason?',o:['Tendon breaks','Areolar tissue breaks','Break of skeletal muscle','Ligament breaks'],a:3},
+  {s:'Zoology',q:'Which of the following is an autoimmune disease?',o:['AIDS','Hemophilia','Rheumatoid arthritis','Allergy'],a:2},
+  // BOTANY
+  {s:'Botany',q:'Terminalization occurs in:',o:['Pachytene','Diplotene','Diakinesis','Leptotene'],a:2},
+  {s:'Botany',q:'Which is not present in carbohydrates?',o:['Hydrogen','Carbon','Nitrogen','Oxygen'],a:2},
+  {s:'Botany',q:'First CO₂ acceptor in C3 plants is:',o:['Ribulose-1,5-biphosphate','Rubisco','Phosphoglyceric acid','Glucose'],a:0},
+  {s:'Botany',q:'Oxidative phosphorylation of one NADH₂ yields:',o:['1 ATP','2 ATP','3 ATP','4 ATP'],a:2},
+  {s:'Botany',q:'Function of Lysosome is:',o:['Digestion of macromolecules','Detoxification of drugs','Protein synthesis','Formation of acrosome'],a:0},
+  {s:'Botany',q:'70s ribosome is absent in:',o:['Prokaryotic cell','Mitochondria','RER','Chloroplast'],a:2},
+  {s:'Botany',q:'Which cell organelle is known as engine of the cell?',o:['Ribosome','Mitochondria','Golgi complex','Lysosome'],a:0},
+  {s:'Botany',q:'Fermentation is carried out by the enzyme:',o:['Invertase','Zymase','Diastase','Amylase'],a:1},
+  {s:'Botany',q:'Pteridophyte differs from bryophytes in having:',o:['Vascular tissue','Alternation of generation','Oogamous reproduction','Multicellular sex organ'],a:0},
+  {s:'Botany',q:'Conservation of plants and animals in their natural ecosystem is called:',o:['Cryopreservation','Botanical garden','Ex-situ conservation','Insitu conservation'],a:3},
+  {s:'Botany',q:'Association in lichen occurs between:',o:['Algae and fungi','Algae and bryophytes','Bryophytes and fungi','Bryophytes and pteridophytes'],a:0},
+  {s:'Botany',q:'Point mutation occurs in:',o:['Sickle cell anaemia','Turner syndrome','Klinefelter\'s syndrome','Edward\'s syndrome'],a:0},
+  {s:'Botany',q:'Thick walled, dead cells with no protoplasm is found in:',o:['Parenchyma','Collenchyma','Sclerenchyma','Aerenchyma'],a:2},
+  {s:'Botany',q:'Which of the following gases is responsible for ozone layer depletion?',o:['O₃','CF₂Cl₂','CO₂','N₂'],a:1},
+  {s:'Botany',q:'Which is incorrect?',o:['m-RNA has linear structure with codon','t-RNA consists of anticodon','r-RNA helps in protein synthesis','t-RNA is the largest among all the types of RNA'],a:3},
+  {s:'Botany',q:'Which one is recessive trait of Pea plant in Mendel\'s experiment?',o:['Green pod','Round seed','Axial position','Green seed'],a:3},
+  {s:'Botany',q:'The smallest segment of DNA that takes part in recombination is:',o:['Recon','Cistron','Muton','Codon'],a:0},
+  {s:'Botany',q:'Common ovule is:',o:['Orthotropus','Anatropus','Campylotropus','Amphitropus'],a:1},
+  {s:'Botany',q:'Conversion of NH₃ to NO₃ is:',o:['Nitrogen assimilation','Nitrifying','Denitrification','Nitrogen fixation'],a:1},
+  {s:'Botany',q:'Cancer causing genes are called:',o:['Recons','Oncogenes','Mutons','Operons'],a:1},
+  {s:'Botany',q:'Sex organ of fern is located in:',o:['Rhizome','Sporangia','Prothallus','Indusium'],a:2},
+  {s:'Botany',q:'Test cross is:',o:['F1 generation with homozygous recessive parents','F1 generation with F1 generation','F1 generation with dominant parent','Homozygous dominant & recessive parents'],a:0},
+  {s:'Botany',q:'Cystic fibrosis is:',o:['Autoimmune disease','Genetic disorder','Infectious disease','Parasitic infection'],a:1},
+  {s:'Botany',q:'Hormone which helps in elongation of internode and leaf expansion is:',o:['Gibberellin','Auxin','Cytokinin','Abscisic acid'],a:0},
+  {s:'Botany',q:'Floral formula of family Brassicaceae is:',o:['Ebr⊕ K2+2 C4 A2+4 G(2)','Ebr% K2+2 C4 A2+4 G(2)','Ebr⊕ K(5) C(5) A5 G(2)','Br⊕ K2+3 C(5) A(5) G(2)'],a:0},
+  {s:'Botany',q:'Endosperm is absent in:',o:['Orchidaceae','Liliaceae','Brassicaceae','Solanaceae'],a:0},
+  {s:'Botany',q:'Tobacco mosaic disease is caused by:',o:['Virus','Bacteria','Fungi','Parasite'],a:0},
+  {s:'Botany',q:'Solanaceae family has .......... placenta.',o:['Marginal','Parietal','Basal','Axile'],a:3},
+  {s:'Botany',q:'Pteridophyta used for ornamental purpose in garden is:',o:['Spirulina','Equisetum','Sphagnum','Polytrichum'],a:1},
+  {s:'Botany',q:'If a dihybrid cross shows 1:1:1:1 phenotypic ratio instead of 9:3:3:1, then it shows:',o:['Linkage','Co-dominance','Law of dominance','Epistasis'],a:0},
+  {s:'Botany',q:'If hemophilic man is married to heterozygous normal woman, probability of having hemophilic son is:',o:['50%','100%','25%','75%'],a:0},
+  {s:'Botany',q:'The maximum number of hydrogen bonds in 700 nucleotides is:',o:['1050','2100','350','1400'],a:0},
+  {s:'Botany',q:'A child\'s blood group is O. The parent groups cannot be:',o:['A and B','A and A','AB and O','B and O'],a:2},
+  // CHEMISTRY
+  {s:'Chemistry',q:'Which of the following is symbiotic organ in human beings?',o:['Tongue','Liver','Rectum and vermiform appendix','Urinary bladder'],a:2},
+  {s:'Chemistry',q:'Pyramid of biomass denotes:',o:['Food chain','Food web','Tropic level','Energy stored'],a:3},
+  {s:'Chemistry',q:'Which of the following forest is found in tropical zone (up to 1000 m)?',o:['Sal forest','Pinus roxburghii forest','Oak forest','Birch-Rhododendron forest'],a:0},
+  {s:'Chemistry',q:'Gaseous exchange occurs through:',o:['Stomata','Hydathodes','Bark','Cambium'],a:0},
+  {s:'Chemistry',q:'Loss of water droplets through vein ending region of leaf margin occurs through:',o:['Lenticels','Hydathode','Stomata','Bark'],a:1},
+  {s:'Chemistry',q:'When pollen of a flower is transferred to the stigma of another flower of the same plant, the pollination is:',o:['Autogamy','Geitonogamy','Xenogamy','Allogamy'],a:1},
+  {s:'Chemistry',q:'Transplant of organ from human beings to other species is called as:',o:['Autograft','Isograft','Allograft','Xenograft'],a:3},
+  {s:'Chemistry',q:'Luster of metal is due to:',o:['High density','High polishing on the surface','Presence of free electron','Chemical inertness'],a:2},
+  {s:'Chemistry',q:'Which is a neutral oxide?',o:['CO₂','MgO','NO','N₂O'],a:2},
+  {s:'Chemistry',q:'Which of the following is an electrophile?',o:['AlCl₃','NH₃','R-NH₂','H₂O'],a:0},
+  {s:'Chemistry',q:'Zinc reacts with dilute HNO₃ to give:',o:['NO₂','NO','N₂O','NH₄NO₃'],a:2},
+  {s:'Chemistry',q:'Which of the following nitrates on strong heating leaves the metal as the residue?',o:['AgNO₃','Pb(NO₃)₂','Cu(NO₃)₂','Al(NO₃)₃'],a:0},
+  {s:'Chemistry',q:'Which of the following is co-polymer?',o:['PVC','Polyethene','Nylon-6.6','Inulin'],a:2},
+  {s:'Chemistry',q:'Highest oxidation number of Mn is present in:',o:['KMnO₄','K₂MnO₄','Mn₂O₃','MnO₂'],a:0},
+  {s:'Chemistry',q:'Oxidation state of Fe in FeSO₃ is:',o:['+1','+2','+3','+4'],a:1},
+  {s:'Chemistry',q:'Which of the following is tert-butyl alcohol?',o:['CH₃-CH₂-CH₂-CH₂-OH','CH₃-C(CH₃)(OH)-CH₃ (2-methylpropan-2-ol)','CH₃-CH(CH₃)-CH₂-OH','CH₃-CH-CH₂-CH₃ with OH on 2nd C'],a:1},
+  {s:'Chemistry',q:'C=O → CH₂ + H₂O (Zn-Hg). The given reaction is:',o:['Wolf Kishner reduction','Clemmensen\'s reduction','Aldol condensation','Oxidation Reaction'],a:1},
+  {s:'Chemistry',q:'Conversion of chlorobenzene to benzene is:',o:['Substitution reaction','Oxidation reaction','Reduction reaction','Addition reaction'],a:2},
+  {s:'Chemistry',q:'Azimuthal quantum number gives:',o:['Size of orbital','Shape of orbital','Orientation of orbital','Spin of electrons'],a:1},
+  {s:'Chemistry',q:'Which of the following is biodegradable polymer?',o:['Nylon 6,6','PHBV','Polyvinyl chloride','Polychloroprene'],a:1},
+  {s:'Chemistry',q:'Why Na₂CO₃ is used as primary substance?',o:['It is unstable','It is deliquescent','It is available in pure form','It is carbonate of sodium'],a:2},
+  {s:'Chemistry',q:'Which of the following is used in production of silk?',o:['Fenton\'s reagent','Schweitzer reagent','Prussian\'s blue','Mohr\'s salt'],a:1},
+  {s:'Chemistry',q:'Which is used in coating the iron tank to prevent it from rusting partially?',o:['Cu','Sn','Al','Ag'],a:2},
+  {s:'Chemistry',q:'C₆H₅CHO + CH₃-CHO → C₆H₅-CH=CH-CHO (cinnamaldehyde). This reaction is:',o:['Claisen condensation','Cannizzaro reaction','Perkins reaction','Clemmensen\'s reduction'],a:0},
+  {s:'Chemistry',q:'Which of the following is an alloy of iron?',o:['Wrought iron','Pig iron','Cast iron','Stainless steel'],a:3},
+  {s:'Chemistry',q:'Which of the following is not an aromatic compound?',o:['Cyclohexane','Pyridine','Benzene','Furanone'],a:0},
+  {s:'Chemistry',q:'Drying agent of ammonia is:',o:['H₂SO₄','Anhy. CaCl₂','P₂O₅','CaO'],a:3},
+  {s:'Chemistry',q:'Which of the following is not a typical transition element?',o:['Fe','Cr','Ni','Zn'],a:3},
+  {s:'Chemistry',q:'Which of the following parameters is constant in adiabatic process?',o:['Heat','Temperature','Pressure','Volume'],a:0},
+  {s:'Chemistry',q:'Coupling reaction is used to make:',o:['Soap','Detergent','Dye','Polymer'],a:2},
+  {s:'Chemistry',q:'The best conductor is:',o:['Silver','Gold','Copper','Aluminium'],a:0},
+  {s:'Chemistry',q:'In a redox reaction, the reducing agent:',o:['gains electrons and is oxidized','gains electrons and is reduced','loses electrons and is oxidized','loses electrons and is reduced'],a:2},
+  {s:'Chemistry',q:'The type of precipitate that is most difficult to filter in quantitative analysis is:',o:['Insoluble','Gelatinous','Curdy','Crystalline'],a:1},
+  {s:'Chemistry',q:'Ethene has double bond, hence it is:',o:['Saturated','Unsaturated','Paraffin','Alcoholic nature'],a:1},
+  {s:'Chemistry',q:'Bond angle in SO₂ is:',o:['109.5°','117°','115°','120°'],a:1},
+  {s:'Chemistry',q:'Super halogen is:',o:['Cl₂','F₂','I₂','Br₂'],a:1},
+  {s:'Chemistry',q:'Type of compound formed by element \'X\' of IIA and element \'Y\' of VIIA group is:',o:['XY₂','X₂Y','XY','(XY)₂'],a:0},
+  {s:'Chemistry',q:'Bohr\'s atomic spectrum is valid for:',o:['hydrogen atom only','hydrogen molecule','hydrogen like single electron species','any species'],a:2},
+  {s:'Chemistry',q:'Amino acid is amphoteric due to:',o:['Alkalinity','Acidity','Both alkalinity & acidity','Saltiness'],a:2},
+  {s:'Chemistry',q:'Ferrocene is:',o:['[Fe(CN)₆]⁴⁻','[Fe(CN)₆]³⁻','Fe(CO)₅','Fe(C₅H₅)₂'],a:3},
+  {s:'Chemistry',q:'Which of the following ions can coagulate As₂S₃ faster?',o:['Al³⁺','Ba²⁺','Pb⁺','Na⁺'],a:0},
+  {s:'Chemistry',q:'In the electrolytic solution, the conduction of electricity is due to:',o:['Free electrons','Ions','Dipole','Atoms'],a:1},
+  {s:'Chemistry',q:'Atmospheric pollution is measured in:',o:['mol/l','g/l','ppm','gm'],a:2},
+  {s:'Chemistry',q:'Which of the following is not responsible for the hardness of water?',o:['Na₂SO₄','CaSO₄','MgSO₄','FeSO₄'],a:0},
+  {s:'Chemistry',q:'Reaction between CuO and HNO₃ gives:',o:['CuNO₃ + H₂O','Cu(NO₃)₂ + H₂O','Cu(NO₃)₂ + H₂','CuNO₃ + H₂'],a:1},
+  {s:'Chemistry',q:'A catalyst changes:',o:['Activation energy of reaction','Thermal energy of reaction','Temperature coefficient of reaction','Kinetic energy of the reactant'],a:0},
+  {s:'Chemistry',q:'Half life of 1st order reaction is:',o:['directly proportional to initial concentration of the reactant','independent of the initial concentration of reactant','Directly proportional to the square of concentration of reactant','Inversely proportional to concentration of the reactant'],a:1},
+  {s:'Chemistry',q:'Lucas test is used for distinction of 1°, 2° and 3°:',o:['Alcohol','Phenol','Aldehyde','Amine'],a:0},
+  {s:'Chemistry',q:'Tetraethyl lead is used as:',o:['Fire extinguisher','Oil additive','Solvent','Mosquito repellent'],a:1},
+  {s:'Chemistry',q:'Na₂S₂O₃·5H₂O is used to test:',o:['Sodium','Ammonia','Bromine','Chlorine'],a:2},
+  {s:'Chemistry',q:'Silicon is:',o:['Semiconductor','Insulator','Non-conductor','Conductor'],a:0},
+  {s:'Chemistry',q:'0.5 M glucose is isotonic with:',o:['1 M Sucrose','0.5 M KCl','0.5 M CaCl₂','0.5 M Urea'],a:3},
+  {s:'Chemistry',q:'IUPAC name of CH₃COCH₂CH₂CH₃ is:',o:['Pentan-2-one','Propylmethyl ketone','4-Pentanone','Ethyl acetate'],a:0},
+  {s:'Chemistry',q:'Which of the following is refined by zone refining process?',o:['Si','V','Ti','C'],a:0},
+  {s:'Chemistry',q:'On ozonolysis, benzene gives:',o:['Only ethanol','Ethanal','Methanal','Ethenedial'],a:2},
+  {s:'Chemistry',q:'Which of the following acts both as oxidizing agent and reducing agent?',o:['HNO₃','HNO₂','H₂S','H₂SO₄'],a:1},
+  {s:'Chemistry',q:'Ionization energy is minimum for:',o:['1s² 2s² 2p⁶','1s² 2s² 2p⁵','1s² 2s² 2p⁶ 3s¹','1s² 2s² 2p¹'],a:2},
+  // PHYSICS
+  {s:'Physics',q:'SI unit of magnetic flux is:',o:['Weber','Maxwell','Tesla','Gauss'],a:0},
+  {s:'Physics',q:'Wheatstone bridge is used to measure:',o:['Current','Voltage','Resistance','Potential difference'],a:2},
+  {s:'Physics',q:'X-ray can penetrate muscles but not bones because bones have:',o:['High molecular weight','Low molecular weight','Hard crystalline structure','Amorphous nature'],a:2},
+  {s:'Physics',q:'Which of the following is universal gate?',o:['OR','AND','NOT','NOR'],a:3},
+  {s:'Physics',q:'Quark combination of neutron is:',o:['uud','udd','uds','ddd'],a:1},
+  {s:'Physics',q:'Which of the following has same dimension as stress?',o:['Velocity','Pressure','Impulse','Energy'],a:1},
+  {s:'Physics',q:'A cooking pot should have:',o:['High specific heat and low thermal conductivity','High specific heat and high thermal conductivity','Low specific heat and low thermal conductivity','Low specific heat and high thermal conductivity'],a:3},
+  {s:'Physics',q:'A water has temperature 22°C. A Geyser ejects 1L water per minute at 37°C. What is the power of geyser?',o:['1050 watt','760 watt','2055 watt','1890 watt'],a:0},
+  {s:'Physics',q:'For ideal gas, Joule Thomson effect is:',o:['Positive','Negative','Infinity','Zero'],a:3},
+  {s:'Physics',q:'A train travels 40 km at 80 km/hr and next 40 km at 40 km/hr. Average speed of the train is:',o:['40 km/hr','48 km/hr','45 km/hr','53 km/hr'],a:3},
+  {s:'Physics',q:'A cathode ray is:',o:['Positive','Positron','Neutral','Stream of fast moving electrons'],a:3},
+  {s:'Physics',q:'Quantum theory is explained by:',o:['Photon','Positron','Electron','Pion'],a:0},
+  {s:'Physics',q:'In the person who cannot see nearer than 25cm:',o:['Size of eyeball increases','Size of eyeball decreases','Distance between eye lens and retina can\'t be decreased','Focal length can\'t be decreased beyond certain limit'],a:3},
+  {s:'Physics',q:'Green house effect is caused by:',o:['Infrared rays','UV rays','X-ray','Visible ray'],a:0},
+  {s:'Physics',q:'A sample with half life 2hr is 64 times stronger than the safe amount. After how much time (in hrs) is it safe to work with?',o:['12','24','48','36'],a:0},
+  {s:'Physics',q:'Reflecting telescope uses:',o:['Convex Mirror','Concave Mirror','Plano-convex lens','Prism'],a:1},
+  {s:'Physics',q:'Escape velocity on the surface of earth is:',o:['5.6 km/s','22.4 km/s','11.2 km/s','44.8 km/s'],a:2},
+  {s:'Physics',q:'A cyclist on a circular track of radius 40m completes half revolution in 40 sec. Its average velocity is:',o:['0 m/s','2 m/s','4π m/s','8π m/s'],a:1},
+  {s:'Physics',q:'What happens to value of \'g\' on going to height \'h\' from the Earth surface?',o:['Increases','Decreases','Remains constant','Becomes zero'],a:1},
+  {s:'Physics',q:'The slope of graphical representation of Ohm\'s law (voltage versus current) is:',o:['Negative','Unity','Positive','Infinite'],a:2},
+  {s:'Physics',q:'Half life of C-14 isotope is:',o:['5730 years','5750 years','5770 years','5790 years'],a:0},
+  {s:'Physics',q:'Which process helps to generate power stroke in petrol engine?',o:['Adiabatic expansion','Adiabatic compression','Isothermal expansion','Isothermal compression'],a:0},
+  {s:'Physics',q:'Young\'s modulus for perfectly rigid body is:',o:['0','1','Infinity','Cannot be determined'],a:2},
+  {s:'Physics',q:'Transmission of heat through the actual movement of particles of medium is:',o:['Conduction','Convection','Reflection','Radiation'],a:1},
+  {s:'Physics',q:'The frictional force exerted by air on a meteor of mass 0.25 kg moving with acceleration 9.2 m/s² is:',o:['2.3','0.12','2.5','0'],a:3},
+  {s:'Physics',q:'To undergo fusion reaction the required condition is:',o:['High temperature and high pressure','Low temperature and high pressure','High temperature and low pressure','Low temperature and high pressure'],a:0},
+  {s:'Physics',q:'According to standard Model spin half particles are known as:',o:['Fermion','Bosons','Photons','Nucleons'],a:0},
+  {s:'Physics',q:'The range of 10¹⁰ Hz frequency is:',o:['UV rays','Infrared rays','Radio waves','Visible rays'],a:2},
+  {s:'Physics',q:'A sound having intensity of 10⁻⁶ W/m² has loudness of:',o:['60 dB','30 dB','90 dB','120 dB'],a:0},
+  {s:'Physics',q:'Two tuning forks A and B sounded together produce 5 beats. Frequency of B is 512 Hz. When fork A is filed, beat frequency increases. The frequency of A is:',o:['502 Hz','0.517 Hz','517 Hz','5.17 Hz'],a:2},
+  {s:'Physics',q:'In electromagnetic wave, orientation of electric and magnetic waves is:',o:['0°','90°','180°','120°'],a:1},
+  {s:'Physics',q:'The resultant of two forces 3P and 2P is R. If the first force is doubled, the resultant is also doubled. The angle between the forces is:',o:['45°','90°','60°','120°'],a:3},
+  {s:'Physics',q:'If Boron is doped with an intrinsic semiconductor then resulting form is:',o:['P-type conductor','N-type semiconductor','P-type semiconductor','N-type conductor'],a:2},
+  {s:'Physics',q:'The absolute zero is the temperature at which:',o:['water freezes','substances exist in solid state','molecular motion stops','none of these happens'],a:2},
+  {s:'Physics',q:'When water is heated from 0 to 4°C:',o:['Cp > Cv','Cp < Cv','Cp - Cv = R','Cp = Cv'],a:1},
+  {s:'Physics',q:'The kinetic energy of a proton accelerated by 1 V is:',o:['1/1840 eV','1840 eV','1 eV','(1840)^(1/2) eV'],a:2},
+  {s:'Physics',q:'The energy gap between the conduction band and valance band of certain material is 0.7 eV. The material is:',o:['an insulator','a conductor','semiconductor','semimetal'],a:2},
+  {s:'Physics',q:'The torque due to gravitational force on a body about its centre of mass is:',o:['infinite','finite','zero','cannot be measured'],a:2},
+  {s:'Physics',q:'The SHM of a particle is given by y = 4sinωt + 3cosωt. The amplitude is:',o:['7','1','5','12'],a:2},
+  {s:'Physics',q:'The velocity (c) of light when an observer moves towards the source with velocity v is:',o:['c','c - v','c + v','√(1 - v²/c²)'],a:0},
+  {s:'Physics',q:'Bragg\'s law has no solution if:',o:['λ > 2d','λ = 2d','λ < 2d','λ > d'],a:0},
+  {s:'Physics',q:'The PN junction will be forward biased if:',o:['Both P and N junction are grounded','P-region is grounded and N-region is given +ve charge','P-region is given positive charge and N-region is grounded','Both are given positive charge'],a:2},
+  {s:'Physics',q:'The capacitance of a capacitor is independent of:',o:['Quality of plates','Size of plates','Distance between plates','Medium between plates'],a:0},
+  {s:'Physics',q:'Radius of conductor is increased by 2 times then specific resistance will be:',o:['2 times','4 times','Unchanged','8 times'],a:2},
+  {s:'Physics',q:'In radioactive disintegration, if mother nuclei zX^A undergoes β+ decay, daughter nuclei will be:',o:['z+1Y^A','z-1Y^A','z+1Y^(A+1)','zY^(A-1)'],a:1},
+  {s:'Physics',q:'The change of entropy (ΔS) in an adiabatic process is:',o:['Zero (0)','Positive','Negative','Can be negative or positive'],a:0},
+  {s:'Physics',q:'Which of the following best describes the second law of thermodynamics?',o:['Energy can neither be created nor destroyed','The change in entropy decreases','When an isolated system undergoes a spontaneous change, the entropy of the system will increase','Heat flows from hot body to cold body'],a:2},
+  {s:'Physics',q:'Speed of sound is greater in solids than in liquid because:',o:['The solids have high elasticity','Liquids have high elasticity','The atoms in solid are regularly arranged','The atoms in liquid are closely packed'],a:0},
+  {s:'Physics',q:'When light travels from air to glass:',o:['λ increase','λ decrease','f and λ decrease','f increase'],a:1},
+  // MATH & REASONING
+  {s:'Math & Reasoning',q:'Radioactive disintegration is an example of:',o:['1st order reaction','2nd order reaction','Zero order reaction','Third order reaction'],a:0},
+  {s:'Math & Reasoning',q:'Krishna Bhattarai, Lal Bahadur Chand, Pushpa Kamal Dahal, _______, BP Koirala, Khadga Oli',o:['Dr. Ram Baran Yadav','Surya Thapa','Bidhya Devi Bhandari','Ram Chandra Poudel'],a:1},
+  {s:'Math & Reasoning',q:'An article was bought for Rs. 240 and sold for Rs. 120. Calculate loss or profit percent.',o:['50% loss','50% profit','120% loss','75% loss'],a:0},
+  {s:'Math & Reasoning',q:'Calculate minimum number of straight lines required to make a given figure.',o:['16','17','19','21'],a:1},
+  {s:'Math & Reasoning',q:'Find the mirror image of the given figure.',o:['Option A','Option B','Option C','Option D'],a:2},
+  {s:'Math & Reasoning',q:'Choose the correct Venn-diagram for: Ethanol, Sanitizer, Beverages',o:['Option A','Option B','Option C','Option D'],a:0},
+  {s:'Math & Reasoning',q:'Find the missing number in the pattern (Triangle: 2,35,5,7 / 3,48,8,4,1 / ?,9)',o:['36','40','18','27'],a:2},
+  {s:'Math & Reasoning',q:'Choose the figure which is different from the rest.',o:['(iv)','(ii)','(iii)','(i)'],a:0},
+  {s:'Math & Reasoning',q:'A new motor fills a tank in 10 hours. Both motors together fill it in 6 hours. How long does the old motor take alone?',o:['12 hours','15 hours','20 hours','60 hours'],a:1},
+  {s:'Math & Reasoning',q:'If ACHARYA is coded as AAACHRY then how is ADHIKARI coded?',o:['AAADHIRK','AADHKIR','ADHKIIAR','AADHIIKR'],a:3},
+  {s:'Math & Reasoning',q:'Find the number of triangles from the given figure.',o:['24','28','29','33'],a:2},
+  {s:'Math & Reasoning',q:'Prakriti attempted 180 out of 200 questions and scored 160 marks (25% negative marking). How many questions did she answer correctly?',o:['175','168','164','160'],a:2},
+  {s:'Math & Reasoning',q:'Find the missing figure in the matrix pattern.',o:['Option A','Option B','Option C','Option D'],a:2},
+  {s:'Math & Reasoning',q:'4, 11, 30, 67, ?',o:['98','105','124','128'],a:3},
+  {s:'Math & Reasoning',q:'Marked price of perfume is Rs. 2500. Discount 20%, then 13% VAT. How much did the shopkeeper gain/lose?',o:['Rs. 240 loss','Rs. 260 loss','Rs. 240 gain','Rs. 260 gain'],a:0},
+  {s:'Math & Reasoning',q:'What no. of dots lie to the opposite of 2 dots in the given natural dice?',o:['1','3','5','6'],a:2},
+  {s:'Math & Reasoning',q:'Arrange in meaningful sequence: 1.SEE 2.PG 3.Plus two 4.BLE 5.UG',o:['1,3,5,2,4','4,1,3,5,2','1,3,4,5,2','4,1,3,2,5'],a:1},
+  {s:'Math & Reasoning',q:'F M O W / U N ? D — Find the missing letter.',o:['H','J','I','Q'],a:2},
+  {s:'Math & Reasoning',q:'A queue of 50 students: all girls first, then boys. Prapti is 36th from last and at the bottom place from girls. Number of boys?',o:['14','15','35','36'],a:2},
+  {s:'Math & Reasoning',q:'If A = half of 50% of one-third of 25% of 18000, then double of A is:',o:['375','450','750','900'],a:2},
+  {s:'Math & Reasoning',q:'\'Pulp\' is to \'Paper\' as \'Hemp\' is to what?',o:['Cotton','Rope','Nylon','Plastic'],a:1},
+];
+
+const TOTAL_TIME = 3 * 60 * 60;
+let answers = new Array(200).fill(-1);
+let timeLeft = TOTAL_TIME;
+let timerInterval = null;
+let examStarted = false;
+
+const SECTION_COLORS = {
+  'Zoology': '#2563eb',
+  'Botany': '#16a34a',
+  'Chemistry': '#d97706',
+  'Physics': '#db2777',
+  'Math & Reasoning': '#7c3aed'
+};
+
+function show(id) {
+  ['screen-start','screen-exam','screen-result'].forEach(s => {
+    document.getElementById(s).classList.remove('active');
+  });
+  document.getElementById(id).classList.add('active');
+}
+
+function startExam() {
+  show('screen-exam');
+  buildExam();
+  startTimer();
+  examStarted = true;
+  window.scrollTo(0,0);
+}
+
+function buildExam() {
+  const body = document.getElementById('exam-body');
+  let html = '';
+  let curSection = '';
+  const sColors = {'Zoology':'zoo','Botany':'bot','Chemistry':'chem','Physics':'phy','Math & Reasoning':'math'};
+  const sLabels = {'Zoology':'🔬 Zoology','Botany':'🌿 Botany','Chemistry':'⚗️ Chemistry','Physics':'⚡ Physics','Math & Reasoning':'🧮 Mathematics & Reasoning'};
+
+  QUESTIONS.forEach((q, i) => {
+    if (q.s !== curSection) {
+      curSection = q.s;
+      const col = SECTION_COLORS[q.s];
+      html += `<div class="section-header"><span class="section-dot" style="background:${col}"></span>${sLabels[q.s]}</div>`;
+    }
+    html += `<div class="qcard" id="qcard-${i}">
+      <div class="qnum">Q${i+1} · ${q.s}</div>
+      <div class="qtext">${q.q}</div>
+      <div class="opts">`;
+    const letters = ['A','B','C','D'];
+    q.o.forEach((opt, j) => {
+      html += `<div class="opt" id="opt-${i}-${j}" onclick="selectAnswer(${i},${j})">
+        <span class="opt-letter">${letters[j]}</span>
+        <span>${opt}</span>
+      </div>`;
+    });
+    html += `</div></div>`;
+  });
+  body.innerHTML = html;
+}
+
+function selectAnswer(qi, oi) {
+  const prev = answers[qi];
+  if (prev === oi) {
+    // deselect
+    answers[qi] = -1;
+    document.getElementById(`opt-${qi}-${oi}`).classList.remove('selected');
+    document.getElementById(`qcard-${qi}`).classList.remove('answered');
+  } else {
+    if (prev !== -1) document.getElementById(`opt-${qi}-${prev}`).classList.remove('selected');
+    answers[qi] = oi;
+    document.getElementById(`opt-${qi}-${oi}`).classList.add('selected');
+    document.getElementById(`qcard-${qi}`).classList.add('answered');
+  }
+  updateLiveStats();
+}
+
+function updateLiveStats() {
+  const answered = answers.filter(a => a !== -1).length;
+  document.getElementById('live-answered').textContent = `✓ ${answered} answered`;
+  document.getElementById('live-remaining').textContent = `${200 - answered} left`;
+}
+
+function startTimer() {
+  const el = document.getElementById('timer');
+  timerInterval = setInterval(() => {
+    timeLeft--;
+    const h = Math.floor(timeLeft / 3600);
+    const m = Math.floor((timeLeft % 3600) / 60);
+    const s = timeLeft % 60;
+    el.textContent = `⏱ ${h}:${String(m).padStart(2,'0')}:${String(s).padStart(2,'0')}`;
+    if (timeLeft <= 600) el.className = 'timer warn';
+    if (timeLeft <= 120) el.className = 'timer danger';
+    if (timeLeft <= 0) { clearInterval(timerInterval); submitExam(); }
+  }, 1000);
+}
+
+function confirmSubmit() {
+  const answered = answers.filter(a => a !== -1).length;
+  const unanswered = 200 - answered;
+  if (unanswered > 0) {
+    if (!confirm(`You have ${unanswered} unanswered questions. Submit anyway?`)) return;
+  }
+  clearInterval(timerInterval);
+  submitExam();
+}
+
+function submitExam() {
+  clearInterval(timerInterval);
+  buildResult();
+  show('screen-result');
+  window.scrollTo(0,0);
+}
+
+function buildResult() {
+  let correct = 0, wrong = 0, skipped = 0;
+  const secStats = {};
+  QUESTIONS.forEach((q,i) => {
+    if (!secStats[q.s]) secStats[q.s] = {correct:0,wrong:0,skipped:0,total:0};
+    secStats[q.s].total++;
+    if (answers[i] === -1) { skipped++; secStats[q.s].skipped++; }
+    else if (answers[i] === q.a) { correct++; secStats[q.s].correct++; }
+    else { wrong++; secStats[q.s].wrong++; }
+  });
+  const score = correct - (wrong * 0.25);
+  const pct = (score / 200 * 100).toFixed(1);
+
+  // Hero
+  let grade = '';
+  if (pct >= 90) grade = '🏆 Outstanding!';
+  else if (pct >= 75) grade = '🌟 Excellent!';
+  else if (pct >= 60) grade = '👍 Good Performance';
+  else if (pct >= 45) grade = '📚 Keep Practicing';
+  else grade = '💪 More Effort Needed';
+
+  document.getElementById('result-hero').innerHTML = `
+    <h1>Test Complete</h1>
+    <div class="score-big">${score.toFixed(2)}</div>
+    <div class="score-max">out of 200 marks</div>
+    <div class="grade">${grade} — ${pct}%</div>
+  `;
+
+  // Stats grid
+  document.getElementById('stats-grid').innerHTML = `
+    <div class="stat-box"><div class="n n-correct">${correct}</div><div class="l">Correct</div></div>
+    <div class="stat-box"><div class="n n-wrong">${wrong}</div><div class="l">Wrong</div></div>
+    <div class="stat-box"><div class="n n-skip">${skipped}</div><div class="l">Skipped</div></div>
+    <div class="stat-box"><div class="n n-score">${score.toFixed(2)}</div><div class="l">Score</div></div>
+  `;
+
+  // Section scores
+  let secHtml = '<h3>Section-wise Performance</h3>';
+  Object.entries(secStats).forEach(([sec, st]) => {
+    const spct = Math.round(st.correct / st.total * 100);
+    const col = SECTION_COLORS[sec];
+    secHtml += `<div class="sec-row">
+      <div class="sec-name">${sec}</div>
+      <div class="sec-bar-wrap"><div class="sec-bar" style="width:${spct}%;background:${col}"></div></div>
+      <div class="sec-pct">${st.correct}/${st.total}</div>
+    </div>`;
+  });
+  document.getElementById('section-scores').innerHTML = secHtml;
+
+  // Review
+  let revHtml = '<h3>Question Review</h3>';
+  QUESTIONS.forEach((q, i) => {
+    const ua = answers[i];
+    const isCorrect = ua === q.a;
+    const isSkipped = ua === -1;
+    const cls = isSkipped ? 'skipped' : isCorrect ? 'correct' : 'wrong';
+    const badge = isSkipped ? '<span class="rq-badge badge-skipped">Skipped</span>' :
+                  isCorrect ? '<span class="rq-badge badge-correct">+1 Correct</span>' :
+                              '<span class="rq-badge badge-wrong">−0.25 Wrong</span>';
+    const letters = ['A','B','C','D'];
+    let optsHtml = '';
+    q.o.forEach((opt, j) => {
+      let optCls = '';
+      if (j === q.a) optCls = 'correct-ans';
+      else if (j === ua && ua !== q.a) optCls = 'user-wrong';
+      if (optCls || j === q.a || j === ua) {
+        optsHtml += `<div class="rq-opt ${optCls}">
+          <strong>${letters[j]})</strong> ${opt}
+          ${j === q.a ? ' ✓' : ''}${j === ua && ua !== q.a ? ' ✗' : ''}
+        </div>`;
+      }
+    });
+    revHtml += `<div class="rqcard ${cls}">
+      <div class="rq-meta"><span style="font-size:12px;color:#94a3b8">Q${i+1}</span>${badge}</div>
+      <div class="rq-text">${q.q}</div>
+      <div class="rq-opts">${optsHtml}</div>
+    </div>`;
+  });
+  document.getElementById('review-section').innerHTML = revHtml;
+}
+
+function retryExam() {
+  answers = new Array(200).fill(-1);
+  timeLeft = TOTAL_TIME;
+  examStarted = false;
+  show('screen-start');
+  window.scrollTo(0,0);
+}
+</script>
+</body>
+</html>
